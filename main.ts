@@ -48,7 +48,7 @@ function makeBoatVisible (boatArray: Sprite[]) {
 }
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (moveBoatFlag == 3) {
-        cursor.setFlag(SpriteFlag.Invisible, false)
+        isHitOrMiss(boatSpriteArrayP2)
     } else {
         currentBoat += 1
         grid.place(cursor, tiles.getTileLocation(0, 0))
@@ -110,6 +110,53 @@ function moveBoat (boatArray: any[], boatRotateArray: string[]) {
             grid.place(currentBoatSprite, tiles.getTileLocation(grid.spriteCol(cursor) + iterator, grid.spriteRow(cursor)))
         }
         iterator += 1
+    }
+}
+function isHitOrMiss (enemyBpats: Sprite[][]) {
+    for (let index = 0; index <= 2; index++) {
+        for (let currentBoatSprite2 of enemyBpats[index]) {
+            if (grid.spriteCol(currentBoatSprite2) == grid.spriteCol(cursor) && grid.spriteRow(currentBoatSprite2) == grid.spriteRow(cursor)) {
+                boom = sprites.create(img`
+                    . . . . 2 2 2 2 2 2 2 2 . . . . 
+                    . . . 2 4 4 4 5 5 4 4 4 2 2 2 . 
+                    . 2 2 5 5 d 4 5 5 5 4 4 4 4 2 . 
+                    . 2 4 5 5 5 5 d 5 5 5 4 5 4 2 2 
+                    . 2 4 d d 5 5 5 5 5 5 d 4 4 4 2 
+                    2 4 5 5 d 5 5 5 d d d 5 5 5 4 4 
+                    2 4 5 5 4 4 4 d 5 5 d 5 5 5 4 4 
+                    4 4 4 4 . . 2 4 5 5 . . 4 4 4 4 
+                    . . b b b b 2 4 4 2 b b b b . . 
+                    . b d d d d 2 4 4 2 d d d d b . 
+                    b d d b b b 2 4 4 2 b b b d d b 
+                    b d d b b b b b b b b b b d d b 
+                    b b d 1 1 3 1 1 d 1 d 1 1 d b b 
+                    . . b b d d 1 1 3 d d 1 b b . . 
+                    . . 2 2 4 4 4 4 4 4 4 4 2 2 . . 
+                    . . . 2 2 4 4 4 4 4 2 2 2 . . . 
+                    `, SpriteKind.Projectile)
+                grid.place(boom, grid.getLocation(cursor))
+            } else {
+                boom = sprites.create(img`
+                    2 . . . . . . . . . . . . . . 2 
+                    2 2 . . . . . . . . . . . . 2 . 
+                    . 2 2 . . . . . . . . . . 2 . . 
+                    . . . 2 2 . . . . . . . 2 . . . 
+                    . . . . 2 2 . . . . 2 2 . . . . 
+                    . . . . . 2 2 . . 2 2 . . . . . 
+                    . . . . . . 2 2 2 2 . . . . . . 
+                    . . . . . . . 2 2 . . . . . . . 
+                    . . . . . . 2 2 . 2 2 . . . . . 
+                    . . . . . 2 2 . . . 2 2 . . . . 
+                    . . . . 2 2 . . . . . 2 2 . . . 
+                    . . . 2 2 . . . . . . . 2 2 . . 
+                    . . 2 2 . . . . . . . . . 2 2 . 
+                    . 2 2 . . . . . . . . . . . 2 . 
+                    . 2 . . . . . . . . . . . . . 2 
+                    2 . . . . . . . . . . . . . . . 
+                    `, SpriteKind.Projectile)
+                grid.place(boom, grid.getLocation(cursor))
+            }
+        }
     }
 }
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -306,6 +353,7 @@ function isOverlapping (boatSpriteArrayPX: Sprite[][]) {
     }
     return 0
 }
+let boom: Sprite = null
 let iterator = 0
 let boatRotateArrayP2: string[] = []
 let boatSpriteArrayP2: Sprite[][] = []
